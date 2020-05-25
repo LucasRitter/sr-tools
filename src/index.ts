@@ -1,5 +1,6 @@
 import {Packfile} from "./lib/formats/vpp/file";
 import * as FileSaver from "file-saver";
+import {PackfileHeaderFlags} from "./lib/formats/vpp/header";
 
 const input = <HTMLInputElement>document.getElementById("fileInput")
 let packfile: Packfile = undefined
@@ -7,6 +8,13 @@ let packfile: Packfile = undefined
 function addElements(elem: HTMLElement) {
     const directory = packfile.directory
     elem.innerHTML = ""
+
+    if (packfile.header.flags & (PackfileHeaderFlags.Compressed | PackfileHeaderFlags.Compressed)) {
+        const warning = document.createElement("p")
+        warning.innerHTML = "<span style=\"color: red\">Warning: VPP is compressed or condensed.</span>\n"
+        elem.appendChild(warning)
+    }
+
     for (let i = 0; i < directory.length; i++) {
         const row = document.createElement("tr")
 
@@ -27,7 +35,7 @@ function addElements(elem: HTMLElement) {
 async function downloadFromIndex(i) {
     const directory = packfile.directory[i]
     // Todo: Add support for compressed data
-    const data = await packfile.fetchDataAt(directory.dataOffset, directory.uncompressedSize)
+    const data = await packfile.fetchDataFromIndex(i)
     const blob = new Blob([data])
 
     FileSaver.saveAs(blob, packfile.getNameAtOffset(directory.nameOffset))

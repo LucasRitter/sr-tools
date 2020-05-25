@@ -125,5 +125,6 @@ export class PackfileHeader {
 }
 
 export enum PackfileHeaderFlags {
-
+    Compressed = 1 << 0,
+    Condensed = 1 << 1
 }

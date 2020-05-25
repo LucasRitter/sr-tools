@@ -1,4 +1,4 @@
-import {PackfileHeader} from "./header";
+import {PackfileHeader, PackfileHeaderFlags} from "./header";
 import {PackfileDirectoryEntry} from "./directoryentry";
 import {readNullTerminatedString} from "../../utils/string";
 
@@ -39,6 +39,7 @@ export class Packfile {
 
     private _header: PackfileHeader
     private _directoryEntries: PackfileDirectoryEntry[]
+    private _compressedEntryOffsets: number[]
     private _namesData: ArrayBuffer
 
     public get header() {
@@ -93,13 +94,25 @@ export class Packfile {
         // Fetch data from disk as array buffer
         const entryBuffer = await file.slice(directoryBeginOffset, directoryBeginOffset + vpp._header.directorySize).arrayBuffer()
 
+        const isCompressed = vpp._header.flags & PackfileHeaderFlags.Compressed || vpp._header.flags & PackfileHeaderFlags.Condensed
+
         //
         const entries: PackfileDirectoryEntry[] = []
+        const compressedEntryOffsets: number[] = []
+        let chunk: number = 0
         for (let i = 0; i < vpp._header.directoryEntryCount; i++) {
             const offset = i * PackfileDirectoryEntry.SIZE
-            entries.push(PackfileDirectoryEntry.from(entryBuffer.slice(offset, offset + PackfileDirectoryEntry.SIZE)))
+            const entry = PackfileDirectoryEntry.from(entryBuffer.slice(offset, offset + PackfileDirectoryEntry.SIZE))
+            entries.push(entry)
+
+            if (isCompressed) {
+                compressedEntryOffsets.push(chunk)
+                chunk += Math.ceil(entry.compressedSize / Packfile.CHUNK_SIZE)
+            }
+            // Increase chunk number for next
         }
         vpp._directoryEntries = entries
+        vpp._compressedEntryOffsets = compressedEntryOffsets
 
         // Todo: Ensure proper minimum size
         const namesDataBeginOffset = vpp._sections.names.offset * Packfile.CHUNK_SIZE
@@ -140,21 +153,31 @@ export class Packfile {
         return { ...this._directoryEntries[index] }
     }
 
-    async fetchDataAt(offset: number, length: number) {
-        if (offset + length > this._header.uncompressedDataSize) {
-            throw new Error("Data outside of range")
-        }
+    async fetchDataFromIndex(index: number): Promise<ArrayBuffer> {
+        const entry = this._directoryEntries[index]
 
-        const realOffset = this._sections.data.offset * Packfile.CHUNK_SIZE
+        let offset = 0
+        let size = 0
+
+        if (this._compressedEntryOffsets.length !== 0) {
+            offset = (this._sections.data.offset + this._compressedEntryOffsets[index]) * Packfile.CHUNK_SIZE
+            size = entry.compressedSize
+        } else {
+            offset = this._sections.data.offset * Packfile.CHUNK_SIZE
+            size = entry.uncompressedSize
+        }
 
         switch (this._source.source) {
             case "browser-file": {
-                return this._source.file.slice(realOffset + offset, realOffset + offset + length).arrayBuffer()
+                if (this._compressedEntryOffsets.length !== 0) {
+                    const file = await this._source.file.slice(offset, offset + size).arrayBuffer()
+                    // Todo: Find decompression method
+                    return file
+                }
+                return this._source.file.slice(offset, size).arrayBuffer()
             }
             // Todo: Add download feature to other sources
         }
-
-        return undefined
     }
 
 
