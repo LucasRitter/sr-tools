@@ -1,0 +1,11 @@
+# Yarn / NodeJS
+node_modules/
+
+# Parcel
+.cache/
+.dist/
+
+# IDE
+.vscode/
+.idea/
+dist/

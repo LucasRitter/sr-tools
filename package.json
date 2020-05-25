@@ -1,0 +1,20 @@
+{
+  "name": "sr-tools",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/file-saver": "^2.0.1",
+    "parcel": "^1.12.4",
+    "typescript": "^3.9.3"
+  },
+  "browserslist": [
+    "last 3 Chrome versions"
+  ],
+  "dependencies": {
+    "file-saver": "^2.0.2"
+  },
+  "scripts": {
+    "build": "parcel build ./src/index.html"
+  }
+}
