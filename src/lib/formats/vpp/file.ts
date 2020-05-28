@@ -163,7 +163,7 @@ export class Packfile {
             offset = (this._sections.data.offset + this._compressedEntryOffsets[index]) * Packfile.CHUNK_SIZE
             size = entry.compressedSize
         } else {
-            offset = this._sections.data.offset * Packfile.CHUNK_SIZE
+            offset = this._sections.data.offset * Packfile.CHUNK_SIZE + entry.dataOffset
             size = entry.uncompressedSize
         }
 
@@ -174,7 +174,7 @@ export class Packfile {
                     // Todo: Find decompression method
                     return file
                 }
-                return this._source.file.slice(offset, size).arrayBuffer()
+                return this._source.file.slice(offset, offset + size).arrayBuffer()
             }
             // Todo: Add download feature to other sources
         }
