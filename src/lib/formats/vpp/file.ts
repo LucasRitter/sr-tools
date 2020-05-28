@@ -2,6 +2,10 @@ import {PackfileHeader, PackfileHeaderFlags} from "./header";
 import {PackfileDirectoryEntry} from "./directoryentry";
 import {readNullTerminatedString} from "../../utils/string";
 
+// Todo: Write custom type declarations for node-lz4 package
+// @ts-ignore
+import lz from "~/lib/lz4/lz4"
+
 type BrowserFile = {
     source: "browser-file",
     file: File
@@ -170,9 +174,10 @@ export class Packfile {
         switch (this._source.source) {
             case "browser-file": {
                 if (this._compressedEntryOffsets.length !== 0) {
-                    const file = await this._source.file.slice(offset, offset + size).arrayBuffer()
-                    // Todo: Find decompression method
-                    return file
+                    const file = await this._source.file.slice(offset + 0x10, offset + size).arrayBuffer()
+                    const buffer = new Uint8Array(entry.uncompressedSize)
+                    lz.decompressBlock(new Uint8Array(file), buffer, 0, entry.compressedSize - 0x10, 0)
+                    return buffer
                 }
                 return this._source.file.slice(offset, offset + size).arrayBuffer()
             }

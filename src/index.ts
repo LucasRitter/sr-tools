@@ -11,7 +11,7 @@ function addElements(elem: HTMLElement) {
 
     if (packfile.header.flags & (PackfileHeaderFlags.Compressed | PackfileHeaderFlags.Compressed)) {
         const warning = document.createElement("p")
-        warning.innerHTML = "<span style=\"color: red\">Warning: VPP is compressed or condensed.</span>\n"
+        warning.innerHTML = "<span style=\"color: red\">Warning: VPP is compressed or condensed. Let me know if it doesn't work.</span>\n"
         elem.appendChild(warning)
     }
 
