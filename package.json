@@ -1,20 +1,38 @@
 {
-  "name": "sr-tools",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/file-saver": "^2.0.1",
-    "parcel": "^1.12.4",
-    "typescript": "^3.9.3"
-  },
-  "browserslist": [
-    "last 3 Chrome versions"
-  ],
-  "dependencies": {
-    "file-saver": "^2.0.2"
-  },
-  "scripts": {
-    "build": "parcel build ./src/index.html"
-  }
+    "name": "sr-tools",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/file-saver": "^2.0.1",
+        "@types/react": "^16.9.35",
+        "@types/react-dom": "^16.9.8",
+        "@types/react-router": "^5.1.7",
+        "@types/react-router-dom": "^5.1.5",
+        "@types/styled-theming": "^2.2.3",
+        "parcel": "^1.12.4",
+        "prettier": "^2.0.5",
+        "typescript": "^3.9.3"
+    },
+    "browserslist": [
+        "last 3 Chrome versions"
+    ],
+    "dependencies": {
+        "eva-icons": "^1.1.3",
+        "file-saver": "^2.0.2",
+        "framer-motion": "^1.11.0",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "react-hooks-global-state": "^1.0.0",
+        "react-router": "^5.2.0",
+        "react-router-dom": "^5.2.0",
+        "redux": "^4.0.5",
+        "styled-components": "^5.1.1",
+        "styled-theming": "^2.2.0"
+    },
+    "scripts": {
+        "build": "parcel build ./src/index.html --no-minify",
+        "serve": "parcel serve ./src/index.html",
+        "check-prettier": "prettier -c ./src/*"
+    }
 }

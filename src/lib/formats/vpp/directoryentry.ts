@@ -17,27 +17,27 @@ export class PackfileDirectoryEntry {
      * Offset: 0x0000, Length: 0x0008, uint64
      * Offset of the name in the name data section.
      */
-    nameOffset: number
+    nameOffset: number = 0
 
     /**
      * Offset: 0x0010, Length: 0x0008, uint64
      * Offset of the data in the data section.
      */
-    dataOffset: number
+    dataOffset: number = 0
 
     /**
      * Offset: 0x0018, Length: 0x0008, uint64
-     * Offset of the data in the data section.
+     * Uncompressed size.
      */
-    uncompressedSize: number
+    uncompressedSize: number = 0
 
     /**
      * Offset: 0x0020, Length: 0x0008, uint64
-     * Offset of the data in the data section.
+     * Compressed size. -1 / 0xFFFFFFFFFFFFFFFF if uncompressed.
      */
-    compressedSize: number
+    compressedSize: bigint = 18446744073709551615n
 
-    private constructor() {
+    constructor() {
 
     }
 
@@ -50,11 +50,24 @@ export class PackfileDirectoryEntry {
         const entry = new PackfileDirectoryEntry()
         const view = new DataView(buffer)
 
-        entry.nameOffset = getUint64(view, Offsets.NameOffset, true)
-        entry.dataOffset = getUint64(view, Offsets.DataOffset, true)
-        entry.uncompressedSize = getUint64(view, Offsets.UncompressedSize, true)
-        entry.compressedSize = getUint64(view, Offsets.CompressedSize, true)
+        entry.nameOffset = Number(view.getBigUint64(Offsets.NameOffset, true))
+        entry.dataOffset = Number(view.getBigUint64(Offsets.DataOffset, true))
+        entry.uncompressedSize = Number(view.getBigUint64(Offsets.UncompressedSize, true))
+        entry.compressedSize = view.getBigUint64(Offsets.CompressedSize, true)
 
         return entry
+    }
+
+    public write(): ArrayBuffer {
+        const buffer = new ArrayBuffer(PackfileDirectoryEntry.SIZE)
+        const view = new DataView(buffer)
+
+        // Todo:
+        view.setBigUint64(Offsets.NameOffset, BigInt(this.nameOffset), true)
+        view.setBigUint64(Offsets.DataOffset, BigInt(this.dataOffset), true)
+        view.setBigUint64(Offsets.UncompressedSize, BigInt(this.uncompressedSize), true)
+        view.setBigUint64(Offsets.CompressedSize, this.compressedSize, true)
+
+        return buffer
     }
 }

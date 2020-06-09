@@ -1,0 +1,27 @@
+export const colors = {
+    ultraDarkGrey: '#111',
+    superDarkGrey: '#222',
+    darkGrey: '#333',
+    white: '#fff',
+    grey: '#444',
+    pink: '#f600b9',
+
+    themes: {
+        green: '#0ce989',
+        turquoise: '#4efce0',
+        blue: '#0093ff',
+        purple: '#5500ff',
+        razzmatazz: '#ff0073',
+        orange: '#ff7042',
+        yellow: '#ffbe37',
+        lemon: '#f9f871',
+    },
+    green: '#0ce989',
+    turquoise: '#4efce0',
+    blue: '#0093ff',
+    purple: '#5500ff',
+    razzmatazz: '#ff0073',
+    orange: '#ff7042',
+    yellow: '#ffbe37',
+    lemon: '#f9f871',
+}

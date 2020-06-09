@@ -1,0 +1,17 @@
+@import url('https://rsms.me/inter/inter.css');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono&display=swap');
+
+body {
+    padding: 0;
+    margin: 0;
+
+    font-family: 'Inter var', serif;
+    font-size: 14px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    font-weight: 600;
+
+    user-select: none;
+
+    overflow-x: hidden;
+}
