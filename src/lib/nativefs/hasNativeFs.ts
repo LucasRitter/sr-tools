@@ -1,3 +1,3 @@
 export const hasNativeFs = () => {
-    return window.chooseFileSystemEntries
+    return window.showDirectoryPicker && window.showOpenFilePicker && window.showSaveFilePicker
 }

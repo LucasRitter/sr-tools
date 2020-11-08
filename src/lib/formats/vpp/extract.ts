@@ -4,7 +4,7 @@ import { PackfileContainerNode } from '~/lib/fs/packfile/containerNode'
 export async function extractPackfileNode(node: PackfileContainerNode): Promise<boolean> {
     alert("Please select a folder where the file will be extracted to. It'll create a new folder for the extracted files.")
 
-    const target = await window.chooseFileSystemEntries({ type: 'open-directory' })
+    const target = await window.showDirectoryPicker()
 
     if (!target.isDirectory) {
         alert("Unable to extract to a file :(")

@@ -8,8 +8,8 @@ import { repackPackfile } from '~/lib/formats/vpp/repack'
 
 const repack = async () => {
     alert("Select folder to repack")
-    const source = await window.chooseFileSystemEntries({ type: 'open-directory' })
-    const target = await window.chooseFileSystemEntries({ type: 'save-file' })
+    const source = await window.showDirectoryPicker()
+    const target = await window.showSaveFilePicker()
 
     if (!source.isDirectory || !target.isFile) {
         return

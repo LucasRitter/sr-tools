@@ -1,6 +1,10 @@
 import * as React from 'react'
+// @ts-ignore
+import copy from 'copy-to-clipboard'
 import { InlineCode } from '~/ui/components/code/InlineCode'
 import { Header } from '~/ui/components/Header'
+
+const address = "chrome://flags/#enable-experimental-web-platform-features"
 
 export function NativeFsWarning() {
     return (
@@ -12,7 +16,7 @@ export function NativeFsWarning() {
             </div>
             <div>
                 To enable it, navigate to&nbsp;
-                <InlineCode>chrome://flags/#native-file-system-api</InlineCode>
+                <InlineCode onClick={() => { copy(address)}}>{address}</InlineCode>
                 and select
                 <InlineCode style={{ background: '#55F', color: '#fff' }}>
                     Enabled

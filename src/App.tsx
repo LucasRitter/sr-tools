@@ -12,10 +12,23 @@ import { Routes } from '~/ui/router/routes'
 import { getChromeVersion } from '~/ui/utils/chromeVersion'
 
 declare global {
+    interface FilePickerOptions {
+        types?: {
+            description: string,
+            accept: {[key: string]: [string]}
+        }[],
+        excludeAcceptAllOption?: boolean
+    }
+
     interface Window {
-        chooseFileSystemEntries: (options?: {
-            type: 'open-file' | 'save-file' | 'open-directory'
-        }) => Promise<FileSystemHandle>
+        // Outdated, Chrome <85
+        // chooseFileSystemEntries: (options?: {
+        //     type: 'open-file' | 'save-file' | 'open-directory'
+        // }) => Promise<FileSystemHandle>
+
+        showOpenFilePicker(options?: { multiple?: boolean } & FilePickerOptions),
+        showSaveFilePicker(options?: FilePickerOptions),
+        showDirectoryPicker()
     }
 }
 
@@ -26,8 +39,8 @@ export function App() {
         return <NativeFsWarning />
     }
 
-    if (getChromeVersion() < 82) {
-        return <p>This app requires Chrome 82+</p>
+    if (getChromeVersion() < 85) {
+        return <p>This app requires Chrome 85+</p>
     }
 
     const [isDark] = useGlobalThemeState('dark')

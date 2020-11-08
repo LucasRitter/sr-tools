@@ -4,9 +4,10 @@ import { useGlobalThemeState } from '~/ui/state/theme'
 interface Props {
     children: JSX.Element | string
     style?: React.CSSProperties
+    onClick?: () => void
 }
 
-export function InlineCode({ children, style }: Props) {
+export function InlineCode({ children, style, onClick }: Props) {
     const [isDark] = useGlobalThemeState('dark')
 
     return (
@@ -21,6 +22,7 @@ export function InlineCode({ children, style }: Props) {
                 borderRadius: 4,
                 color: style?.color,
             }}
+            onClick={onClick}
         >
             {children}
         </span>

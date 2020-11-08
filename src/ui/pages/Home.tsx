@@ -14,9 +14,7 @@ export function HomePage(props: Props) {
             <Button
                 type="default"
                 onClick={async () => {
-                    const handle = await window.chooseFileSystemEntries({
-                        type: 'open-directory',
-                    })
+                    const handle = await window.showDirectoryPicker()
                     if (!handle.isDirectory) {
                         alert(
                             'Selected file is not a directory. Please try again.'
